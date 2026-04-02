@@ -94,6 +94,8 @@ k8s 클러스터 구축 실습에서 더 나아가, **브리지 네트워크, CN
 
 ## 📌 k8s설치 과정
 
+<br>
+
 ### 1️⃣ 1단계 — 모든 노드 공통 설정 (네트워크 커널 설정)
 
 ```bash
@@ -126,6 +128,8 @@ sysctl --system
 
 <br>
 
+<br>
+
 ### 2️⃣ 2단계 — containerd 설치 및 설정
 
 ```bash
@@ -137,6 +141,8 @@ sudo containerd config default | sudo tee /etc/containerd/config.toml > /dev/nul
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 sudo systemctl restart containerd
 ```
+
+<br>
 
 <br>
 
@@ -156,6 +162,8 @@ https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | \
 sudo apt-get update
 sudo apt-get install -y kubelet kubeadm kubectl
 ```
+
+<br>
 
 <br>
 
@@ -179,6 +187,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 <br>
 
+<br>
+
 ### 5️⃣ 5단계 — Calico CNI 설치 (마스터 노드에서)
 
 ```bash
@@ -186,6 +196,8 @@ curl -O https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests
 kubectl apply -f calico.yaml --validate=false
 kubectl get pods -n kube-system
 ```
+
+<br>
 
 <br>
 
@@ -200,6 +212,8 @@ sudo kubeadm join 10.0.2.15:6443 --token <token> \
 > ```bash
 > sudo kubeadm token create --print-join-command
 > ```
+
+<br>
 
 <br>
 
@@ -351,7 +365,9 @@ sudo ctr -n k8s.io images import springboot-emp.tar
 
 <br>
 
-### 배포 결과 확인
+<br>
+
+### 📌 배포 결과 확인
 
 ```bash
 kubectl get pods -o wide
@@ -375,8 +391,12 @@ curl http://10.0.2.20:30083/emp/alldept
 <img width="732" height="40" alt="image" src="https://github.com/user-attachments/assets/236c8a94-7ded-4e38-9a9c-bd7ca91304cf" />
 
 <br>
+<br>
+<br>
 
 ---
+
+<br>
 
 ## 🔧 트러블슈팅
 
@@ -431,10 +451,14 @@ sudo kubeadm join ...
 ```
 
 <br>
+<br>
 
 ---
 
+<br>
+
 ## 📊 최종 결과
+<br>
 
 | 항목 | 결과 |
 |------|------|
@@ -450,6 +474,8 @@ sudo kubeadm join ...
 
 ---
 
+<br>
+
 ## 📊 Insight
 
 1. **메모리가 가장 중요한 변수**였습니다. 2GB 환경에서 API 서버, etcd, Calico가 동시에 뜨면서 OOM으로 인해 컴포넌트가 계속 재시작되는 문제가 발생했습니다. K8s 마스터 노드는 최소 4GB, 권장 6GB 이상이 필요합니다.
@@ -461,11 +487,14 @@ sudo kubeadm join ...
 4. **Pod는 어느 노드에 뜰지 모릅니다.** 마스터가 스케줄러를 통해 자동 결정하므로, 이미지는 모든 워커 노드에 미리 준비되어 있어야 합니다.
 
 
+<br>
+<br>
 
 <br>
 
-
 ---
+
+<br>
 
 ## 🔜 추후 계획
  
@@ -491,5 +520,6 @@ sudo kubeadm join ...
 | ClusterIP로 Service 변경 | 외부 직접 노출 대신 Ingress를 통해서만 접근 |
 | 도메인 기반 라우팅 적용 | `emp.local` 도메인으로 SpringBoot 접근 |
 | 경로 기반 라우팅 | `/emp`, `/api` 등 경로별 서비스 분기 |
- 
+ <br>
+
 <br><br>
